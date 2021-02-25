@@ -69,18 +69,18 @@ const drawGraph = data => {
         .attr('data-month', d => d.month - 1)
         .attr('data-year', d => d.year)
         .attr('data-temp', d => d.variance)
-        .style('fill', d => cScale(d.variance));
-    //     .on('mouseover', d => {
-    //         svg.append('text')
-    //             .text(d.Name)
-    //             .attr('id', 'tooltip')
-    //             .attr('x', xScale(yearObject(d)) + 10)
-    //             .attr('y', yScale(timeObject(d)) + 5)
-    //             .attr('data-year', yearObject(d));
-    //     })
-    //     .on('mouseout', () => {
-    //         d3.selectAll('#tooltip').remove();
-    //     });
+        .style('fill', d => cScale(d.variance))
+        .on('mouseover', d => {
+            svg.append('text')
+                .text(d.year)
+                .attr('id', 'tooltip')
+                .attr('x', xScale(d.year) + 10)
+                .attr('y', yScale(d.month) + 5)
+                .attr('data-year', d.year);
+        })
+        .on('mouseout', () => {
+            d3.selectAll('#tooltip').remove();
+        });
 
     const legend = svg.append('g').attr('id', 'legend');
 
