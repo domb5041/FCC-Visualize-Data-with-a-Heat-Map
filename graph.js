@@ -27,17 +27,23 @@ const drawGraph = data => {
         .attr('height', h);
 
     const xScale = d3
-        .scaleTime()
-        .domain(d3.extent(data.monthlyVariance, d => yearObject(d)))
+        .scaleBand()
+        .domain(data.monthlyVariance.map(d => d.year))
         .range([p, w - p]);
 
     const yScale = d3
-        .scaleTime()
-        .domain(d3.extent(data.monthlyVariance, d => monthObject(d)))
+        .scaleBand()
+        .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
         .range([p, h - p]);
 
-    const yAxis = d3.axisLeft(yScale).tickFormat(d3.timeFormat('%b'));
-    const xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat('%Y'));
+    const yAxis = d3
+        .axisLeft(yScale)
+        .tickFormat(month => d3.timeFormat('%b')(new Date(1970, month, 1)));
+
+    const xAxis = d3
+        .axisBottom(xScale)
+        .tickValues(xScale.domain().filter(year => year % 20 === 0))
+        .tickFormat(year => d3.timeFormat('%Y')(new Date(year, 0, 1)));
 
     svg.append('g')
         .attr('transform', `translate(${p}, 0)`)
@@ -49,17 +55,18 @@ const drawGraph = data => {
         .attr('id', 'x-axis')
         .call(xAxis);
 
-    // svg.selectAll('circle')
-    //     .data(dataset)
-    //     .enter()
-    //     .append('circle')
-    //     .attr('cx', d => xScale(yearObject(d)))
-    //     .attr('cy', d => yScale(timeObject(d)))
-    //     .attr('r', 5)
-    //     .attr('class', 'dot')
-    //     .attr('data-xvalue', d => yearObject(d))
-    //     .attr('data-yvalue', d => timeObject(d))
-    //     .style('fill', d => color(d.Doping.length > 0))
+    svg.selectAll('rect')
+        .data(data.monthlyVariance)
+        .enter()
+        .append('rect')
+        .attr('x', d => xScale(d.year))
+        .attr('y', d => yScale(d.month - 1))
+        .attr('width', xScale.bandwidth())
+        .attr('height', yScale.bandwidth());
+    // .attr('class', 'dot')
+    // .attr('data-xvalue', d => yearObject(d))
+    // .attr('data-yvalue', d => timeObject(d))
+    // .style('fill', d => color(d.Doping.length > 0))
     //     .on('mouseover', d => {
     //         svg.append('text')
     //             .text(d.Name)
