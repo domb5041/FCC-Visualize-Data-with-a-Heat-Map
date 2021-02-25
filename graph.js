@@ -33,14 +33,19 @@ const drawGraph = data => {
         .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
         .range([p, h - p]);
 
-    const yAxis = d3
-        .axisLeft(yScale)
-        .tickFormat(month => d3.timeFormat('%B')(new Date(1970, month, 1)));
+    const cScale = d3
+        .scaleThreshold()
+        .domain([-4, -2, 0, 2, 4])
+        .range(['blue', 'lightblue', 'yellow', 'orange', 'red']);
 
     const xAxis = d3
         .axisBottom(xScale)
         .tickValues(xScale.domain().filter(year => year % 20 === 0))
         .tickFormat(year => d3.timeFormat('%Y')(new Date(year, 0, 1)));
+
+    const yAxis = d3
+        .axisLeft(yScale)
+        .tickFormat(month => d3.timeFormat('%B')(new Date(1970, month, 1)));
 
     svg.append('g')
         .attr('transform', `translate(${p}, 0)`)
@@ -63,8 +68,8 @@ const drawGraph = data => {
         .attr('class', 'cell')
         .attr('data-month', d => d.month - 1)
         .attr('data-year', d => d.year)
-        .attr('data-temp', d => d.variance);
-    // .style('fill', d => color(d.Doping.length > 0))
+        .attr('data-temp', d => d.variance)
+        .style('fill', d => cScale(d.variance));
     //     .on('mouseover', d => {
     //         svg.append('text')
     //             .text(d.Name)
