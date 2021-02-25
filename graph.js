@@ -14,9 +14,6 @@ const drawGraph = data => {
     const h = 500;
     const p = 50;
 
-    const yearObject = d => new Date(d.year, 0, 1);
-    const monthObject = d => new Date(1970, d.month - 1, 1);
-
     // const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     const svg = d3
@@ -38,7 +35,7 @@ const drawGraph = data => {
 
     const yAxis = d3
         .axisLeft(yScale)
-        .tickFormat(month => d3.timeFormat('%b')(new Date(1970, month, 1)));
+        .tickFormat(month => d3.timeFormat('%B')(new Date(1970, month, 1)));
 
     const xAxis = d3
         .axisBottom(xScale)
@@ -62,10 +59,11 @@ const drawGraph = data => {
         .attr('x', d => xScale(d.year))
         .attr('y', d => yScale(d.month - 1))
         .attr('width', xScale.bandwidth())
-        .attr('height', yScale.bandwidth());
-    // .attr('class', 'dot')
-    // .attr('data-xvalue', d => yearObject(d))
-    // .attr('data-yvalue', d => timeObject(d))
+        .attr('height', yScale.bandwidth())
+        .attr('class', 'cell')
+        .attr('data-month', d => d.month - 1)
+        .attr('data-year', d => d.year)
+        .attr('data-temp', d => d.variance);
     // .style('fill', d => color(d.Doping.length > 0))
     //     .on('mouseover', d => {
     //         svg.append('text')
