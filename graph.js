@@ -82,17 +82,25 @@ const drawGraph = data => {
     //         d3.selectAll('#tooltip').remove();
     //     });
 
-    // svg.append('g')
-    //     .attr('id', 'legend')
-    //     .selectAll('#legend')
-    //     .data(color.domain())
-    //     .enter()
-    //     .append('text')
-    //     .attr('x', w - 20)
-    //     .attr('y', (d, i) => i * 25 + 25)
-    //     .style('text-anchor', 'end')
-    //     .style('fill', color)
-    //     .text(d =>
-    //         d ? 'Riders with doping allegations' : 'No doping allegations'
-    //     );
+    const legend = svg.append('g').attr('id', 'legend');
+
+    legend
+        .selectAll('rect')
+        .data(cScale.domain())
+        .enter()
+        .append('rect')
+        .attr('x', (d, i) => p + i * 50)
+        .attr('y', 5)
+        .attr('width', 50)
+        .attr('height', 20)
+        .style('fill', d => cScale(d - 0.1));
+
+    legend
+        .selectAll('text')
+        .data(cScale.domain())
+        .enter()
+        .append('text')
+        .attr('x', (d, i) => p + 45 + i * 50)
+        .attr('y', 40)
+        .text(d => d);
 };
